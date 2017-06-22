@@ -9,6 +9,8 @@ include_once "States/autoload.php";
 
 
 $source_file = $argv[1];
+$output_file = $argv[2];
+$errors_file = $argv[3];
 $debug = new Debug($source_file);
 
 $source = trim(file_get_contents($source_file));
@@ -181,22 +183,22 @@ try {
 }
 catch (MY_Exception $e)
 {
-	$f = fopen('errors', "w");
+	$f = fopen($errors_file, "w");
 	fwrite($f, $e->getMessage()."\n");
 	fclose($f);
 
-	$f = fopen('parsed.json', "w");
+	$f = fopen($output_file, "w");
 	fwrite($f, "");
 	fclose($f);
 }
 
 if(isset($code))
 {
-	$f = fopen('errors', "w");
+	$f = fopen($errors_file, "w");
 	fwrite($f, "");
 	fclose($f);
 
-	$f = fopen('parsed.json', "w");
+	$f = fopen($output_file, "w");
 	fwrite($f, json_encode($code)."\n");
 	fclose($f);
 }
