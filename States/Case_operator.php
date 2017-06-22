@@ -61,6 +61,10 @@ class Case_operator extends Primitive_operator
                 $this->state = 'END';
                 $this->operator->set_default();
             }
+            elseif($symbol == "\n")
+            {
+                throw new MY_Exception("Unexpected \\n. Expected ':'");
+            }
             else
                 $this->case_title .= $symbol;
         }
