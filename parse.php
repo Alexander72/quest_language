@@ -3,6 +3,7 @@ define('DEFAULT_STATE', 'DEFAULT');
 include_once "MY_Exception.php";
 include_once "Functions.php";
 include_once "Debug.php";
+include_once "Pointer.php";
 include_once "Operator.php";
 include_once "States/autoload.php";
 
@@ -12,19 +13,21 @@ $debug = new Debug($source_file);
 
 $source = trim(file_get_contents($source_file));
 $source_length = strlen($source);
-$operator = new Operator();
+$operator = new Operator;
+
+$pointer = new Pointer;
 
 function parse($source, $deep = 0)
 {
-	global $operator, $debug;
+	global $operator, $debug, $pointer;
 	$source_length = strlen($source);
 
 	$result = [];
 	$return = false;
-	$i = 0;
+	$pointer->reset();
 
 
-	while( $i < $source_length )
+	while( $pointer->get_pointer() < $source_length )
 	{
 		switch ($operator->get_operator()) {
 			case 'TEXT':
@@ -33,7 +36,7 @@ function parse($source, $deep = 0)
 
 				$text_inited = true;
 
-				$text->add_symbol($source[$i]);
+				$text->add_symbol($source[$pointer->get_pointer()]);
 
 				if($text->result_ready())
 				{
@@ -48,7 +51,7 @@ function parse($source, $deep = 0)
 
 				$case_inited = true;
 	
-				$case->add_symbol($source[$i]);
+				$case->add_symbol($source[$pointer->get_pointer()]);
 	
 				if($case->result_ready())
 				{
@@ -62,7 +65,7 @@ function parse($source, $deep = 0)
 
 				$if_inited = true;
 
-				$if->add_symbol($source[$i]);
+				$if->add_symbol($source[$pointer->get_pointer()]);
 
 				if($if->result_ready())
 				{
@@ -76,7 +79,7 @@ function parse($source, $deep = 0)
 
 				$include_inited = true;
 
-				$include->add_symbol($source[$i]);
+				$include->add_symbol($source[$pointer->get_pointer()]);
 
 				if($include->result_ready())
 				{
@@ -90,7 +93,7 @@ function parse($source, $deep = 0)
 
 				$objects_inited = true;
 
-				$objects->add_symbol($source[$i]);
+				$objects->add_symbol($source[$pointer->get_pointer()]);
 
 				if($objects->result_ready())
 				{
@@ -104,7 +107,7 @@ function parse($source, $deep = 0)
 
 				$money_inited = true;
 
-				$money->add_symbol($source[$i]);
+				$money->add_symbol($source[$pointer->get_pointer()]);
 
 				if($money->result_ready())
 				{
@@ -119,7 +122,7 @@ function parse($source, $deep = 0)
 
 				$tag_inited = true;
 
-				$tag->add_symbol($source[$i]);
+				$tag->add_symbol($source[$pointer->get_pointer()]);
 
 				if($tag->result_ready())
 				{
@@ -133,7 +136,7 @@ function parse($source, $deep = 0)
 
 				$goto_inited = true;
 
-				$goto->add_symbol($source[$i]);
+				$goto->add_symbol($source[$pointer->get_pointer()]);
 
 				if($goto->result_ready())
 				{
@@ -142,9 +145,9 @@ function parse($source, $deep = 0)
 				}
 				break;
 			default:
-				if(trim($source[$i]))
+				if(trim($source[$pointer->get_pointer()]))
 				{
-					$operator->add_symbol_to_current_operator($source[$i]);
+					$operator->add_symbol_to_current_operator($source[$pointer->get_pointer()]);
 				}
 				elseif(!$operator->is_default())
 				{
@@ -152,7 +155,7 @@ function parse($source, $deep = 0)
 				}
 				break;
 		}
-		if($source[$i] == "\n")
+		if($source[$pointer->get_pointer()] == "\n")
 		{
 			if(!$operator->allow_miltiline())
 			{
@@ -166,7 +169,7 @@ function parse($source, $deep = 0)
 		if($return)
 			return $result;
 
-		$i++;
+		$pointer->next();
 	}
 
 	if(!$operator->is_default()) {

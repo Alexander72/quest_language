@@ -95,9 +95,15 @@ class Case_operator extends Recursive_operator
 
         if($this->bracket_counter == -1) {
             if(trim($this->case_source)) {
+                global $pointer;
                 $this->operator->set_default();
+                $stored_pointer = $pointer->get_pointer();
+
                 $res = parse($this->case_source, 1);
                 $this->result['value'][$this->case_title] = $res;
+
+                $pointer->set_pointer($stored_pointer);
+                
                 $this->case_source = '';
                 $this->case_title = '';
                 $this->bracket_counter = 0;

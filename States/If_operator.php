@@ -72,9 +72,15 @@ class If_operator extends Recursive_operator
 
         if($this->bracket_counter == -1) {
             if(trim($this->then_source)) {
+                global $pointer;
                 $this->operator->set_default();
+                $stored_pointer = $pointer->get_pointer();
+
                 $res = parse($this->then_source, 1);
-                $this->result['then'] = $res;
+
+                $pointer->set_pointer($stored_pointer);
+
+                $this->result['THEN'] = $res;
                 $this->then_source = '';
                 $this->bracket_counter = 0;
                 $this->debug->new_line($this->line);
@@ -100,7 +106,9 @@ class If_operator extends Recursive_operator
         }
         else
         {
-            /** @TODO сделать счетчик цикла объектом и сдвинуть его здесь на 1 назад */
+            global $pointer;
+            $pointer->set_pointer($pointer->get_pointer() - 1);
+            $this->set_state('END');
             $this->operator->set_default();
         }
     }
@@ -133,9 +141,15 @@ class If_operator extends Recursive_operator
 
         if($this->bracket_counter == -1) {
             if(trim($this->else_source)) {
+                global $pointer;
                 $this->operator->set_default();
+                $stored_pointer = $pointer->get_pointer();
+
                 $res = parse($this->else_source, 1);
-                $this->result['else'] = $res;
+
+                $pointer->set_pointer($stored_pointer);
+
+                $this->result['ELSE'] = $res;
                 $this->else_source = '';
                 $this->else_title = '';
                 $this->bracket_counter = 0;
@@ -156,6 +170,12 @@ class If_operator extends Recursive_operator
     public function get_result()
     {
         $res = $this->result;
+
+        if(!isset($res['ELSE']))
+            $res['ELSE'] = [];
+        if(!isset($res['THEN']))
+            $res['THEN'] = [];
+
         $res['operator'] = $this->get_operator();
         $res['condition'] = $this->condition;
         $this->set_state('DEFAULT');
