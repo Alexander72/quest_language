@@ -113,10 +113,19 @@ function parse($source, $deep = 0)
 				}
 				break;
 			case 'TAG':
-				# code...
-				break;
 			case '#':
-				# code...
+				if(!isset($tag_inited))
+					$tag = new Tag_operator();
+
+				$tag_inited = true;
+
+				$tag->add_symbol($source[$i]);
+
+				if($tag->result_ready())
+				{
+					$result[] = $tag->get_result();
+					unset($tag_inited);
+				}
 				break;
 			case 'GOTO':
 				if(!isset($goto_inited))
