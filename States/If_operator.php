@@ -190,7 +190,7 @@ class If_operator extends Recursive_operator
             $res['THEN'] = [];
 
         $res['operator'] = $this->get_operator();
-        $res['condition'] = $this->condition;
+        $res['condition'] = trim($this->condition);
         $this->set_state('DEFAULT');
         $this->operator->set_default();
         return $res;
