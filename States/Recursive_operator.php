@@ -13,6 +13,9 @@ abstract class Recursive_operator extends Primitive_operator
     protected $debug;
     protected $result = [];
 
+    protected $line;
+    protected $pos;
+
     public function __construct()
     {
         parent::__construct();
