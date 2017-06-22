@@ -14,3 +14,22 @@ CASE
         TEXT asdasd.ds;
     }
 }
+IF OBJECTS "Топор" > 0 :
+{
+    TEXT win.txt;
+}
+ELSE
+{
+    TEXT win12.txt;
+    CASE
+    {
+        "sdfwfафацууrwewef":
+        {
+            TEXT qweqwe.ss;
+        }
+        "пвыапппу":
+        {
+            TEXT asdasd.ds;
+        }
+    }
+}

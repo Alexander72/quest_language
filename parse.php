@@ -57,7 +57,18 @@ function parse($source, $deep = 0)
 				}
 				break;
 			case 'IF':
-				# code...
+				if(!isset($if_inited))
+					$if = new If_operator;
+
+				$if_inited = true;
+
+				$if->add_symbol($source[$i]);
+
+				if($if->result_ready())
+				{
+					$result[] = $if->get_result();
+					unset($if_inited);
+				}
 				break;
 			case 'INCLUDE':
 				if(!isset($include_inited))
@@ -156,6 +167,23 @@ $code = [
 				[
 					'operator' => "TEXT",
 					'value' => "002.txt"
+				],
+				[
+					'operator' => 'RAND',
+					'value' => [	
+						[
+							'operator' => "TEXT",
+							'value' =>"001.txt"
+						], 	
+						[
+							'operator' => "TEXT",
+							'value' =>"001.txt"
+						], 	
+						[
+							'operator' => "TEXT",
+							'value' =>"001.txt"
+						]
+					]
 				],
 				[
 					'operator' => "CASE",
