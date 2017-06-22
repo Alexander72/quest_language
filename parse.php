@@ -111,12 +111,26 @@ function parse($source, $deep = 0)
 					$result[] = $money->get_result();
 					unset($money_inited);
 				}
-				break;		
+				break;
 			case 'TAG':
 				# code...
 				break;
-			case 'GOTO':
+			case '#':
 				# code...
+				break;
+			case 'GOTO':
+				if(!isset($goto_inited))
+					$goto = new Goto_operator();
+
+				$goto_inited = true;
+
+				$goto->add_symbol($source[$i]);
+
+				if($goto->result_ready())
+				{
+					$result[] = $goto->get_result();
+					unset($goto_inited);
+				}
 				break;
 			default:
 				if(trim($source[$i]))

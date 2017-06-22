@@ -47,3 +47,4 @@ RAND
         TEXT win12.txt;
     }
 }
+GOTO #ABRACADABRA;
