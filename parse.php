@@ -19,15 +19,15 @@ $operator = new Operator;
 
 $pointer = new Pointer;
 
-function parse($source, $deep = 0)
+$TAGS = [];
+
+function parse($source, $path = [], $deep = 0)
 {
 	global $operator, $debug, $pointer;
 	$source_length = strlen($source);
 
 	$result = [];
 	$pointer->reset();
-
-
 
 	while( $pointer->get_pointer() < $source_length )
 	{
@@ -48,8 +48,11 @@ function parse($source, $deep = 0)
 				break;
 			case 'RAND':
 			case 'CASE':
-				if(!isset($case_inited))
-					$case = new Case_operator($operator->get_operator());
+				if(!isset($case_inited)) {
+					$tmp = $path;
+					$tmp[] = count($result);
+					$case = new Case_operator($operator->get_operator(), $tmp);
+				}
 
 				$case_inited = true;
 	
@@ -62,8 +65,11 @@ function parse($source, $deep = 0)
 				}
 				break;
 			case 'IF':
-				if(!isset($if_inited))
-					$if = new If_operator;
+				if(!isset($if_inited)) {
+					$tmp = $path;
+					$tmp[] = count($result);
+					$if = new If_operator($tmp);
+				}
 
 				$if_inited = true;
 
@@ -128,8 +134,19 @@ function parse($source, $deep = 0)
 
 				if($tag->result_ready())
 				{
-					$result[] = $tag->get_result();
+					global $TAGS;
+					$res = $tag->get_result();
+					$result[] = $res;
 					unset($tag_inited);
+
+					if(!isset($TAGS[$res['value']])) {
+						$tmp = $path;
+						$tmp[] = count($result) - 1;
+						$TAGS[$res['value']] = $tmp;
+					}
+					else{
+						throw new MY_Exception('Tag \''.$res['value'].'\' already defined');
+					}
 				}
 				break;
 			case 'GOTO':
@@ -200,5 +217,6 @@ if(isset($code))
 
 	$f = fopen($output_file, "w");
 	fwrite($f, json_encode($code)."\n");
+	fwrite($f, json_encode($TAGS)."\n");
 	fclose($f);
 }

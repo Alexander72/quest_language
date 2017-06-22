@@ -15,10 +15,13 @@ class If_operator extends Recursive_operator
     private $then_source;
     private $else_source;
 
-    public function __construct()
+    private $path;
+
+    public function __construct($path)
     {
         parent::__construct();
         $this->condition = '';
+        $this->path = $path;
     }
 
     protected function get_operator()
@@ -77,7 +80,9 @@ class If_operator extends Recursive_operator
                 $this->line = $this->debug->get_line();
                 $this->pos = $this->debug->get_position() + 1;
 
-                $res = parse($this->then_source, 1);
+                $path = $this->path;
+                $path[] = 'THEN';
+                $res = parse($this->then_source, $path);
                 $this->result['THEN'] = $res;
 
                 $pointer->set_pointer($stored_pointer);
@@ -150,13 +155,15 @@ class If_operator extends Recursive_operator
 
                 $stored_pointer = $pointer->get_pointer();
 
-                $res = parse($this->else_source, 1);
+                $path = $this->path;
+                $path[] = 'ELSE';
+                $res = parse($this->else_source, $path);
 
                 $pointer->set_pointer($stored_pointer);
 
                 $this->debug->new_line($this->line);
                 $this->debug->new_pos($this->pos);
-                
+
                 $this->result['ELSE'] = $res;
                 $this->else_source = '';
                 $this->else_title = '';

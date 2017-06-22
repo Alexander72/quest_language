@@ -9,6 +9,11 @@ CASE
     {
         TEXT qweqwe.ss;
     }
+    "444444":
+    {
+        TEXT qweqwe.ss;
+        #ABRACADABRA;
+    }
     "пвыапппу":
     {
         TEXT asdasd.ds;
@@ -17,6 +22,7 @@ CASE
 IF OBJECTS "Топор" > 0 :
 {
     TEXT win.txt;
+    #WQWQWQWQWQWQW1312312;
 }
 ELSE
 {
@@ -25,6 +31,7 @@ ELSE
     {
         "sdfwfафацууrwewef":
         {
+            #WQWQWQWQWQWQW;
             TEXT qweqwe.ss;
         }
         "пвыапппу":
@@ -48,4 +55,3 @@ RAND
     }
 }
 GOTO #ABRACADABRA;
-#ABRACADABRA;

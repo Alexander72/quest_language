@@ -12,10 +12,13 @@ class Case_operator extends Recursive_operator
     private $case_title;
     private $bracket_counter = 0;
 
+    private $path;
+
     private $type;
 
-    public function __construct($type)
+    public function __construct($type, $path)
     {
+        $this->path = $path;
         $this->type = $type;
         parent::__construct();
     }
@@ -103,7 +106,10 @@ class Case_operator extends Recursive_operator
                 $this->line = $this->debug->get_line();
                 $this->pos = $this->debug->get_position() + 1;
 
-                $res = parse($this->case_source, 1);
+                $path = $this->path;
+                $path[] = 'value';
+                $path[] = $this->case_title;
+                $res = parse($this->case_source, $path);
                 $this->result['value'][$this->case_title] = $res;
 
                 $pointer->set_pointer($stored_pointer);
