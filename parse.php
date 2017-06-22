@@ -44,7 +44,7 @@ function parse($source, $deep = 0)
 			case 'RAND':
 			case 'CASE':
 				if(!isset($case_inited))
-					$case = new Case_operator;
+					$case = new Case_operator($operator->get_operator());
 
 				$case_inited = true;
 	

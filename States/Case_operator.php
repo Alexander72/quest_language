@@ -12,9 +12,18 @@ class Case_operator extends Recursive_operator
     private $case_title;
     private $bracket_counter = 0;
 
+    private $type;
+
+    public function __construct($type)
+    {
+        $this->type = $type;
+        parent::__construct();
+    }
+
+
     protected function get_operator()
     {
-        return 'CASE';
+        return $this->type;
     }
 
     protected function set_states()

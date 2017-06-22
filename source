@@ -33,3 +33,17 @@ ELSE
         }
     }
 }
+RAND
+{
+    "eqeqw":{
+        TEXT win12.txt;
+    }
+    "111111111111111":{
+        TEXT win12.txt;
+    }
+    "aaaaaaaaaaaaa":
+
+    {
+        TEXT win12.txt;
+    }
+}
