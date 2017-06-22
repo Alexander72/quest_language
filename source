@@ -1,0 +1,16 @@
+TEXT 001.txt;
+TEXT 001.txt;
+MONEY -2;
+OBJECTS +3 "теплый гренадин";
+INCLUDE	0002.ccc;
+CASE
+{
+    "sdfwfафацууrwewef":
+    {
+        TEXT qweqwe.ss;
+    }
+    "пвыапппу":
+    {
+        TEXT asdasd.ds;
+    }
+}

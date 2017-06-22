@@ -1,0 +1,45 @@
+
+TEXT 001.txt;
+CASE
+{
+    "направо": 
+    {
+		TEXT 002.txt;
+		CASE
+		{
+		    "топор":
+		    {
+				OBJECTS +1 "Топор";
+				INCLUDE code1.txt;
+				MONEY +200;
+				#TOPOR;
+				TEXT 003.txt;
+				CASE
+				{ 
+					"напасть"
+					{
+						IF OBJECTS "Топор" > 0
+						{
+							TEXT win.txt;
+						}
+						ELSE:
+						{
+							TEXT win12.txt;					
+						}
+				    }
+				    "лопата":
+				    {
+						OBJECTS +1 "Лопата";
+						GOTO #TOPOR;
+				    }
+				}
+			}
+		}
+    }
+	"налево":
+	{
+		TEXT 007.txt;
+		OBJECTS +5 "Жвачка";
+		GOTO #FIGHT;
+	}
+}
