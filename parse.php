@@ -178,13 +178,25 @@ function parse($source, $deep = 0)
 
 try {
 	$code = parse($source);
-	$f = fopen('parsed.json', "w");
-	fwrite($f, json_encode($code)."\n");
-	fclose($f);
 }
 catch (MY_Exception $e)
 {
 	$f = fopen('errors', "w");
 	fwrite($f, $e->getMessage()."\n");
+	fclose($f);
+
+	$f = fopen('parsed.json', "w");
+	fwrite($f, "");
+	fclose($f);
+}
+
+if(isset($code))
+{
+	$f = fopen('errors', "w");
+	fwrite($f, "");
+	fclose($f);
+
+	$f = fopen('parsed.json', "w");
+	fwrite($f, json_encode($code)."\n");
 	fclose($f);
 }
