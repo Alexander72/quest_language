@@ -5,7 +5,7 @@
  * Date: 22.06.17
  * Time: 5:59
  */
-class Primitive_operator
+abstract class Primitive_operator
 {
 
     protected $value;
