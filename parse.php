@@ -23,8 +23,8 @@ function parse($source, $deep = 0)
 	$source_length = strlen($source);
 
 	$result = [];
-	$return = false;
 	$pointer->reset();
+
 
 
 	while( $pointer->get_pointer() < $source_length )
@@ -151,7 +151,7 @@ function parse($source, $deep = 0)
 				}
 				elseif(!$operator->is_default())
 				{
-					throw new MY_Exception("Unexpected ".$operator->get_operator_building(), $debug->get_position() - strlen($operator->get_operator_building()));
+					throw new MY_Exception("Unexpected '".$operator->get_operator_building()."'", $debug->get_position() - strlen($operator->get_operator_building()));
 				}
 				break;
 		}
@@ -165,116 +165,26 @@ function parse($source, $deep = 0)
 		}
 		$debug->new_pos();
 
-		//need for recursion
-		if($return)
-			return $result;
 
 		$pointer->next();
 	}
 
 	if(!$operator->is_default()) {
-		throw new MY_Exception("Unexpected " . $operator->get_operator_building(), $debug->get_position() - strlen($operator->get_operator_building()));
+		throw new MY_Exception("Unexpected '" . $operator->get_operator_building()."'", $debug->get_position() - strlen($operator->get_operator_building()));
 	}
 
 	return $result;
 }
-$code = parse($source);
-p($code, 1);
-/*
-$code = [	
-	[
-		'operator' => "TEXT",
-		'value' =>"001.txt"
-	], 
-	[
-		'operator' => "CASE",
-		'value' => [
-			'привет' => [
-				[
-					'operator' => "TEXT",
-					'value' => "002.txt"
-				],
-				[
-					'operator' => 'RAND',
-					'value' => [	
-						[
-							'operator' => "TEXT",
-							'value' =>"001.txt"
-						], 	
-						[
-							'operator' => "TEXT",
-							'value' =>"001.txt"
-						], 	
-						[
-							'operator' => "TEXT",
-							'value' =>"001.txt"
-						]
-					]
-				],
-				[
-					'operator' => "CASE",
-					'value' =>[
-						'лошадка' => [
-							[
-								'operator' => "OBJECTS",
-								'operation' => "+",
-								'value' => 1,
-								'item' => "копье"
-							],
-							[
-								'operator' => "INCLUDE",
-								'value' => "code1.txt"
-							],
-							[
-								'operator' => "TAG",
-								'value' => "TOPOR"
-							],
-							[
-								'operator' => "IF",
-								'condition' => "((a = 2 && v=3) || 2 > p + 2) && r < c",
-								'THEN' => [
-									[
-										'operator' => "GOTO",
-										'value' => "TOPOR"
-									]
-								],
-								'ELSE' => [
-									[
-										'operator' => "MONEY",
-										'operation' => "+",
-										'value' => 1,
-									]
-								]
-							]
 
-						],
-						'пол' => []
-					]
-				]
-			],
-			'лопата' => []
-		]
-	],
-	[
-		'operator' => "RAND",
-			'value' => [
-				'вася' => [],
-				'петя' => [],
-				'дима' => [],
-			]
-	]
-];
-$goto = [
-	'TOPOR' => [
-		'path' => [1, "value", "привет", 1, "value", "лошадка", 3]
-	]
-];
-$f = fopen('parsed.json', "w");
-fwrite($f, json_encode($code)."\n");
-fwrite($f, json_encode($goto)."\n");
-fclose($f);
-
-$code = file_get_contents('parsed.json');
-
-v(mb_convert_encoding($code, 'UTF-8'), 1);
-*/
+try {
+	$code = parse($source);
+	$f = fopen('parsed.json', "w");
+	fwrite($f, json_encode($code)."\n");
+	fclose($f);
+}
+catch (MY_Exception $e)
+{
+	$f = fopen('errors', "w");
+	fwrite($f, $e->getMessage()."\n");
+	fclose($f);
+}

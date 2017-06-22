@@ -20,7 +20,7 @@ class Operator
 		$this->operator_building .= $symbol;
 
 		if(!$this->can_increase_to_operator())
-			throw new MY_Exception('Unexpected '.$this->operator_building);
+			throw new MY_Exception('Unexpected \''.$this->operator_building.'\'');
 
 		if($this->can_be_operator($this->operator_building))
 		{
@@ -76,7 +76,7 @@ class Operator
 	private function can_increase_to_operator()
 	{
 		$str = $this->operator_building;
-		
+
 		if($str == "#")
 			return true;
 

@@ -51,7 +51,7 @@ class Case_operator extends Recursive_operator
     {
         if($symbol == ':') {
             if(trim($this->case_title))
-                if(preg_match('/"(.*)"/', $this->case_title, $matches)){
+                if(preg_match('/^"(.*)"/', trim($this->case_title), $matches)){
                     $this->case_title = $matches[1];
                     $this->set_state('WAIT_CASE');
                 }
@@ -62,6 +62,9 @@ class Case_operator extends Recursive_operator
                 throw new MY_Exception("Unexpected ':'. Expected case name");
         }
         elseif($symbol == '}') {
+            if(trim($this->case_title))
+                throw new MY_Exception("Unexpected '".trim($this->case_title)."'. Expected '}'");
+
             $this->result_ready = true;
             $this->set_state('END');
             $this->operator->set_default();
@@ -77,8 +80,6 @@ class Case_operator extends Recursive_operator
     protected function wait_case_state($symbol)
     {
         if($symbol == '{') {
-            $this->line = $this->debug->get_line();
-            $this->pos = $this->debug->get_position() + 1;
             $this->set_state('CASE');
         }
         else
@@ -99,11 +100,14 @@ class Case_operator extends Recursive_operator
                 $this->operator->set_default();
                 $stored_pointer = $pointer->get_pointer();
 
+                $this->line = $this->debug->get_line();
+                $this->pos = $this->debug->get_position() + 1;
+
                 $res = parse($this->case_source, 1);
                 $this->result['value'][$this->case_title] = $res;
 
                 $pointer->set_pointer($stored_pointer);
-                
+
                 $this->case_source = '';
                 $this->case_title = '';
                 $this->bracket_counter = 0;

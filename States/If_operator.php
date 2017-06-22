@@ -54,8 +54,6 @@ class If_operator extends Recursive_operator
     protected function wait_then_state($symbol)
     {
         if($symbol == '{') {
-            $this->line = $this->debug->get_line();
-            $this->pos = $this->debug->get_position() + 1;
             $this->set_state('THEN');
         }
         else
@@ -76,15 +74,20 @@ class If_operator extends Recursive_operator
                 $this->operator->set_default();
                 $stored_pointer = $pointer->get_pointer();
 
+                $this->line = $this->debug->get_line();
+                $this->pos = $this->debug->get_position() + 1;
+
                 $res = parse($this->then_source, 1);
+                $this->result['THEN'] = $res;
 
                 $pointer->set_pointer($stored_pointer);
 
-                $this->result['THEN'] = $res;
                 $this->then_source = '';
                 $this->bracket_counter = 0;
+
                 $this->debug->new_line($this->line);
                 $this->debug->new_pos($this->pos);
+
                 $this->set_state('WAIT_ELSE');
                 $this->operator->set_operator('IF');
             }
@@ -117,8 +120,6 @@ class If_operator extends Recursive_operator
     {
 
         if($symbol == '{') {
-            $this->line = $this->debug->get_line();
-            $this->pos = $this->debug->get_position() + 1;
             $this->set_state('ELSE');
         }
         else
@@ -143,18 +144,23 @@ class If_operator extends Recursive_operator
             if(trim($this->else_source)) {
                 global $pointer;
                 $this->operator->set_default();
+
+                $this->line = $this->debug->get_line();
+                $this->pos = $this->debug->get_position() + 1;
+
                 $stored_pointer = $pointer->get_pointer();
 
                 $res = parse($this->else_source, 1);
 
                 $pointer->set_pointer($stored_pointer);
 
+                $this->debug->new_line($this->line);
+                $this->debug->new_pos($this->pos);
+                
                 $this->result['ELSE'] = $res;
                 $this->else_source = '';
                 $this->else_title = '';
                 $this->bracket_counter = 0;
-                $this->debug->new_line($this->line);
-                $this->debug->new_pos($this->pos);
                 $this->set_state('END');
                 $this->operator->set_default();
             }
