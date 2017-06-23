@@ -11,3 +11,8 @@ function v($var, $die = false)
 	var_dump($var);
 	if($die) die();
 }
+
+function lines_count($string)
+{
+	return substr_count($string, "\n");
+}

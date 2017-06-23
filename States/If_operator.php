@@ -48,6 +48,8 @@ class If_operator extends Recursive_operator
         {
             $this->set_state('WAIT_THEN');
         }
+        elseif($symbol == "\n")
+            throw new MY_Exception("Unexpected '\\n'. Expected ':'");
         else
         {
             $this->condition .= $symbol;
@@ -80,6 +82,7 @@ class If_operator extends Recursive_operator
                 $this->line = $this->debug->get_line();
                 $this->pos = $this->debug->get_position() + 1;
 
+                $this->debug->new_line($this->line - lines_count($this->then_source));
                 $path = $this->path;
                 $path[] = 'THEN';
                 $res = parse($this->then_source, $path);
@@ -155,6 +158,7 @@ class If_operator extends Recursive_operator
 
                 $stored_pointer = $pointer->get_pointer();
 
+                $this->debug->new_line($this->line - lines_count($this->else_source));
                 $path = $this->path;
                 $path[] = 'ELSE';
                 $res = parse($this->else_source, $path);

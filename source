@@ -19,7 +19,7 @@ CASE
         TEXT asdasd.ds;
     }
 }
-IF OBJECTS "Топор" > 0 :
+IF OBJECTS "Топор" > 0   :
 {
     TEXT win.txt;
     #WQWQWQWQWQWQW1312312;

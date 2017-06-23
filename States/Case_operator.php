@@ -33,7 +33,8 @@ class Case_operator extends Recursive_operator
     {
         $this->states = [
             'DEFAULT' => ['start' => true, 'method' => 'default_state'],
-            'CASE_TITLE' => ['method' => 'case_title_state'],
+            'WAIT_CASE_TITLE' => ['method' => 'wait_case_title'],
+            'CASE_TITLE' => ['method' => 'case_title_state', 'need_trim' => false],
             'WAIT_CASE' => ['method' => 'wait_case_state'],
             'CASE' => ['recursive' => true, 'method' => 'case_state', 'need_trim' => false],
             'END' => ['finish' => true, 'method' => 'end_state'],
@@ -43,10 +44,34 @@ class Case_operator extends Recursive_operator
     protected function default_state($symbol)
     {
         if($symbol == '{') {
-            $this->set_state('CASE_TITLE');
+            $this->set_state('WAIT_CASE_TITLE');
         }
         else {
             throw new MY_Exception("Unexpected '".$symbol."'. Expected '{'");
+        }
+    }
+
+    protected function wait_case_title($symbol)
+    {
+        if($symbol == ':')
+            throw new MY_Exception("Unexpected ':'. Expected case name");
+        elseif($symbol == '}')
+        {
+            if($this->result) {
+                $this->result_ready = true;
+                $this->set_state('END');
+                $this->operator->set_default();
+            }
+            else{
+                throw new MY_Exception("Empty case");
+            }
+        }
+        elseif($symbol != "\"")
+            throw new MY_Exception("Unexpected '".$symbol."'. Expected case name");
+        else
+        {
+            $this->set_state('CASE_TITLE');
+            $this->case_title = $symbol;
         }
     }
 
@@ -63,14 +88,6 @@ class Case_operator extends Recursive_operator
                 }
             else
                 throw new MY_Exception("Unexpected ':'. Expected case name");
-        }
-        elseif($symbol == '}') {
-            if(trim($this->case_title))
-                throw new MY_Exception("Unexpected '".trim($this->case_title)."'. Expected '}'");
-
-            $this->result_ready = true;
-            $this->set_state('END');
-            $this->operator->set_default();
         }
         elseif($symbol == "\n")
         {
@@ -106,6 +123,7 @@ class Case_operator extends Recursive_operator
                 $this->line = $this->debug->get_line();
                 $this->pos = $this->debug->get_position() + 1;
 
+                $this->debug->new_line($this->line - lines_count($this->case_source));
                 $path = $this->path;
                 $path[] = 'value';
                 $path[] = $this->case_title;
@@ -119,7 +137,7 @@ class Case_operator extends Recursive_operator
                 $this->bracket_counter = 0;
                 $this->debug->new_line($this->line);
                 $this->debug->new_pos($this->pos);
-                $this->set_state('CASE_TITLE');
+                $this->set_state('WAIT_CASE_TITLE');
                 $this->operator->set_operator('CASE');
             }
             else{
