@@ -34,7 +34,7 @@ class If_operator extends Recursive_operator
         $this->states = [
             'DEFAULT' => ['start' => true, 'method' => 'default_state', 'need_trim' => false],
             'WAIT_THEN' => ['method' => 'wait_then_state'],
-            'THEN' => ['recursive' => true, 'method' => 'then_state'],
+            'THEN' => ['recursive' => true, 'method' => 'then_state', 'need_trim' => false],
             'WAIT_ELSE' => ['method' => 'wait_else_state'],
             'COLLECT_ELSE' => ['method' => 'collect_else_state'],
             'ELSE' => ['recursive' => true, 'method' => 'else_state', 'need_trim' => false],

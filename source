@@ -1,57 +1,56 @@
 TEXT 001.txt;
-TEXT 001.txt;
 MONEY -2;
-OBJECTS +3 "теплый гренадин";
-INCLUDE	0002.ccc;
+MONEY +100;
+OBJECTS +2 "теплый гренадин";
+OBJECTS +2 "Топор";
 CASE
 {
-    "sdfwfафацууrwewef":
-    {
-        TEXT qweqwe.ss;
-    }
-    "444444":
-    {
-        TEXT qweqwe.ss;
-        #ABRACADABRA;
+    "vbvbvb":
+    {	
+		TEXT 002.txt;
+		IF OBJECTS "Топор" > 0 :
+		{
+			INCLUDE	new1.txt;
+			TEXT 004.txt;
+		}
+		ELSE
+		{
+			#ABRACADABRA;
+			TEXT 005.txt;
+			CASE
+			{
+				"sdfwfафацууrwewef":
+				{
+					INCLUDE	new1.txt;
+					TEXT 006.txt;
+				}
+				"пвыапппу":
+				{
+					TEXT 007.txt;
+				}
+			}
+		}
     }
     "пвыапппу":
     {
-        TEXT asdasd.ds;
-    }
-}
-IF OBJECTS "Топор" > 0   :
-{
-    TEXT win.txt;
-    #WQWQWQWQWQWQW1312312;
-}
-ELSE
-{
-    TEXT win12.txt;
-    CASE
-    {
-        "sdfwfафацууrwewef":
-        {
-            #WQWQWQWQWQWQW;
-            TEXT qweqwe.ss;
-        }
-        "пвыапппу":
-        {
-            TEXT asdasd.ds;
-        }
-    }
-}
-RAND
-{
-    "eqeqw":{
-        TEXT win12.txt;
-    }
-    "111111111111111":{
-        TEXT win12.txt;
-    }
-    "aaaaaaaaaaaaa":
+        TEXT 003.txt;
+		GOTO #ABRACADABRA;
+		RAND
+		{
+			"eqeqw":{
+				TEXT 008.txt;
+			}
+			"111111111111111":{
+				TEXT 001.txt;
+			}
+			"aaaaaaaaaaaaa":
 
-    {
-        TEXT win12.txt;
+			{
+				GOTO #ABRACADABRA;
+			}
+		}
     }
 }
-GOTO #ABRACADABRA;
+
+
+
